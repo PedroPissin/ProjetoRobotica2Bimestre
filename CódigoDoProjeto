@@ -1,0 +1,35 @@
+#include <LiquidCrystal.h>
+#include <Servo.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); // Conexões do LCD
+Servo servoMotor; // Objeto Servo
+int potPin = A0; // Porta do potenciômetro
+int servoPin = 7; // Porta do servo motor
+
+void setup() {
+  lcd.begin(16, 2); // Inicializa o LCD com 16 colunas e 2 linhas
+  lcd.print("Projeto do Pedro"); // Exibe "CTEI Arco:" no LCD
+  servoMotor.attach(servoPin); // Anexa o servo motor à porta definida
+  delay(600);
+}
+
+void loop() {
+  int recebeValor = analogRead(potPin); // Lê o valor na porta analógica do potenciômetro
+  int remap = map(recebeValor, 0, 1023, 0, 180); // Mapeia o valor lido para a faixa de 0 a 180
+
+  lcd.setCursor(0, 1); // Define a posição do cursor no início da segunda linha do LCD
+  lcd.print("Angulo: "); // Exibe a mensagem "Angulo:"
+
+  lcd.setCursor(8, 1); // Define a posição do cursor para exibir o valor de angulação
+  if (remap < 100) {
+    lcd.print(" ");
+  }
+  if (remap < 10) {
+    lcd.print(" ");
+  }
+  lcd.print(remap); // Exibe o valor mapeado no LCD
+
+  servoMotor.write(remap); // Define a posição do servo motor com base no valor mapeado
+
+  delay(400);
+}
